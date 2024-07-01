@@ -1,0 +1,77 @@
+* Sountstandbyblocker 
+
+* Code Explanation
+
+This code is written in C and uses the PulseAudio library to generate and play a sound.
+
+** Header Files and Constants
+
+#+BEGIN_SRC c
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <math.h>
+
+#include <pulse/simple.h>
+#include <pulse/error.h>
+
+#define BUFSIZE 1024
+#define PI 3.14159265
+#define SAMPLE_RATE 44100
+#define SLEEP_DURATION 60
+#+END_SRC
+
+The code starts by including necessary header files and defining constants. The config.h file is included if it exists. This is a common practice in open source projects to handle different build configurations.
+
+The constants BUFSIZE, PI, SAMPLE_RATE, and SLEEP_DURATION are defined for later use in the program.
+
+** Sound Frame Structure
+
+#+BEGIN_SRC c
+struct SoundTrame
+{
+    int size;
+    short *trame;
+    int next;
+};
+#+END_SRC
+
+This structure is used to store a sound frame, with information about its size, the frame data itself, and an index for the next element.
+
+** Sine Wave Generation
+
+#+BEGIN_SRC c
+short *sineWave(int frequency, int maxVolume)
+#+END_SRC
+
+This function generates a sine wave of a specified frequency and volume. The wave is generated for a duration of one second, with a sample rate defined by SAMPLE_RATE.
+
+** Sound Frame Creation
+
+#+BEGIN_SRC c
+struct SoundTrame trame(int start, short *sample, int sampleSize)
+#+END_SRC
+
+This function creates a SoundTrame structure from a given sample array. The SoundTrame structure contains a portion of the sample array starting from a specified index. The size of the portion is determined by the BUFSIZE constant.
+
+** Sound Playback
+
+#+BEGIN_SRC c
+int playsound(short *sample)
+#+END_SRC
+
+This function plays a sound sample using the PulseAudio library. The sound sample is divided into frames using the trame function, and each frame is played back using the pa_simple_write function from the PulseAudio library.
+
+** Main Function
+
+#+BEGIN_SRC c
+int main(int argc, char *argv[])
+#+END_SRC
+
+This is the main function of the program. It generates a sine wave, then enters an infinite loop where it plays the sound and then sleeps for a duration defined by SLEEP_DURATION.
